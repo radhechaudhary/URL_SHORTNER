@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SwiftLink — A blazing-fast URL shortener. Paste your long URL, get a clean short link instantly and share it anywhere." />
+    <title>SwiftLink — URL Shortener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Background particles -->
+    <div class="bg-particles" aria-hidden="true">
+      <div class="particle p1"></div>
+      <div class="particle p2"></div>
+      <div class="particle p3"></div>
+      <div class="particle p4"></div>
+      <div class="particle p5"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="nav-inner">
+        <div class="nav-brand">
+          <span class="brand-icon" aria-hidden="true">⚡</span>
+          <span class="brand-name">SwiftLink</span>
+        </div>
+        <div class="nav-badge">Free &amp; Fast</div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          <span>Trusted by 10k+ users worldwide</span>
+        </div>
+
+        <h1 id="hero-heading" class="hero-title">
+          Shorten URLs<br />
+          <span class="gradient-text">in one click</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Transform long, ugly links into clean, shareable short URLs instantly.
+          No sign-up required — just paste, click, and go.
+        </p>
+
+        <!-- Features pills -->
+        <div class="features-pills" role="list" aria-label="Key features">
+          <div class="pill" role="listitem">
+            <span class="pill-icon">🚀</span> Instant shortening
+          </div>
+          <div class="pill" role="listitem">
+            <span class="pill-icon">📋</span> One-click copy
+          </div>
+          <div class="pill" role="listitem">
+            <span class="pill-icon">🔒</span> Secure &amp; reliable
+          </div>
+          <div class="pill" role="listitem">
+            <span class="pill-icon">📊</span> Track your links
+          </div>
+        </div>
+      </section>
+
+      <!-- URL Shortener Card -->
+      <section class="card-section" aria-labelledby="card-heading">
+        <div class="card">
+          <div class="card-header">
+            <h2 id="card-heading" class="card-title">Shorten your URL</h2>
+            <p class="card-subtitle">Paste any long link below and get your short URL instantly</p>
+          </div>
+
+          <!-- Input group -->
+          <div class="input-group">
+            <label for="long-url-input" class="input-label">Your long URL</label>
+            <div class="input-wrapper" id="input-wrapper">
+              <span class="input-icon" aria-hidden="true">🔗</span>
+              <input
+                type="url"
+                id="long-url-input"
+                class="url-input"
+                placeholder="https://example.com/very/long/url/that/needs/shortening"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Enter the URL you want to shorten"
+                aria-describedby="url-error"
+              />
+              <button id="clear-btn" class="clear-btn" aria-label="Clear input" title="Clear" hidden>✕</button>
+            </div>
+            <span id="url-error" class="error-text" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Submit button -->
+          <button id="shorten-btn" class="shorten-btn" aria-label="Shorten URL">
+            <span class="btn-text">Shorten URL</span>
+            <span class="btn-icon" aria-hidden="true">→</span>
+            <span class="btn-loader" aria-hidden="true"></span>
+          </button>
+
+          <!-- Result group (hidden initially) -->
+          <div class="result-group" id="result-group" aria-live="polite" aria-atomic="true" hidden>
+            <div class="result-divider" aria-hidden="true">
+              <span class="divider-line"></span>
+              <span class="divider-text">Your short link is ready!</span>
+              <span class="divider-line"></span>
+            </div>
+
+            <label for="short-url-output" class="input-label">Shortened URL</label>
+            <div class="output-wrapper">
+              <span class="result-icon" aria-hidden="true">✨</span>
+              <input
+                type="text"
+                id="short-url-output"
+                class="url-output"
+                readonly
+                aria-label="Your shortened URL"
+              />
+              <button id="copy-btn" class="copy-btn" aria-label="Copy shortened URL to clipboard">
+                <span class="copy-icon" aria-hidden="true">📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+
+            <div class="result-actions">
+              <a id="open-link" href="#" target="_blank" rel="noopener noreferrer" class="action-link" aria-label="Open shortened URL in new tab">
+                Open link ↗
+              </a>
+              <button id="shorten-another-btn" class="action-link action-link--secondary" aria-label="Shorten another URL">
+                + Shorten another
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row" role="list" aria-label="Service statistics">
+          <div class="stat" role="listitem">
+            <span class="stat-value">10M+</span>
+            <span class="stat-label">Links shortened</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat" role="listitem">
+            <span class="stat-value">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat" role="listitem">
+            <span class="stat-value">&lt;100ms</span>
+            <span class="stat-label">Response time</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="how-section" aria-labelledby="how-heading">
+        <h2 id="how-heading" class="section-title">How it works</h2>
+        <div class="steps-grid" role="list">
+          <article class="step-card" role="listitem">
+            <div class="step-number" aria-hidden="true">01</div>
+            <div class="step-icon" aria-hidden="true">📌</div>
+            <h3 class="step-title">Paste your URL</h3>
+            <p class="step-desc">Copy your long URL from anywhere and paste it into the input field above.</p>
+          </article>
+          <article class="step-card" role="listitem">
+            <div class="step-number" aria-hidden="true">02</div>
+            <div class="step-icon" aria-hidden="true">⚡</div>
+            <h3 class="step-title">Click Shorten</h3>
+            <p class="step-desc">Hit the Shorten URL button and we'll generate your unique short link in milliseconds.</p>
+          </article>
+          <article class="step-card" role="listitem">
+            <div class="step-number" aria-hidden="true">03</div>
+            <div class="step-icon" aria-hidden="true">🎉</div>
+            <h3 class="step-title">Share &amp; track</h3>
+            <p class="step-desc">Copy your short link and share it anywhere. Track visits in real time.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <p>Built with ⚡ by <span class="footer-brand">SwiftLink</span> &mdash; Fast, free, and reliable URL shortening.</p>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

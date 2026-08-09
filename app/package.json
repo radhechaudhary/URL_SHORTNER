@@ -1,0 +1,22 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "migrate": "node-pg-migrate",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.23.0",
+    "redis": "^6.2.0"
+  },
+  "devDependencies": {
+    "node-pg-migrate": "^9.0.0"
+  }
+}
