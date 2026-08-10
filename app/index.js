@@ -56,7 +56,7 @@ app.get((req, res) => {
 
 app.post('/shorten', async (req, res) => {
     let { url, expiresIn } = req.body;
-    console.log(req.headers)
+    // console.log(req.headers)
     if (!url) {
         return res.status(400).json({ message: 'URL is required.' });
     }
@@ -68,7 +68,7 @@ app.post('/shorten', async (req, res) => {
     } catch {
         return res.status(400).json({ message: 'Please provide a valid http/https URL.' });
     }
-    console.log(expiresIn)
+    // console.log(expiresIn)
     // expiresIn = 10
 
     let shortCode = await urlStore();
