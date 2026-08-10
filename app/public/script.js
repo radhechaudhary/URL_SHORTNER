@@ -1,5 +1,5 @@
 /**
- * SwiftLink — URL Shortener Frontend Logic
+ * Linker — URL Shortener Frontend Logic
  * Communicates with the Express backend at /api/shorten
  */
 
@@ -97,10 +97,13 @@ async function shortenUrl() {
   shortenBtn.classList.add('loading');
 
   try {
+    const selectedExpiry = document.querySelector('input[name="expiry"]:checked')?.value ?? 'none';
+    const expiresIn = selectedExpiry === 'none' ? null : Number(selectedExpiry);
+
     const response = await fetch('/shorten', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: raw }),
+      body: JSON.stringify({ url: raw, expiresIn }),
     });
 
     if (!response.ok) {

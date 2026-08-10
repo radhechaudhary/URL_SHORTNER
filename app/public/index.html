@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SwiftLink — A blazing-fast URL shortener. Paste your long URL, get a clean short link instantly and share it anywhere." />
-    <title>SwiftLink — URL Shortener</title>
+    <meta name="description" content="Linker — A blazing-fast URL shortener. Paste your long URL, get a clean short link instantly and share it anywhere." />
+    <title>Linker — URL Shortener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -25,7 +25,7 @@
       <div class="nav-inner">
         <div class="nav-brand">
           <span class="brand-icon" aria-hidden="true">⚡</span>
-          <span class="brand-name">SwiftLink</span>
+          <span class="brand-name">Linker</span>
         </div>
         <div class="nav-badge">Free &amp; Fast</div>
       </div>
@@ -94,6 +94,33 @@
             <span id="url-error" class="error-text" role="alert" aria-live="polite"></span>
           </div>
 
+          <!-- Expiry selector -->
+          <div class="expiry-group">
+            <span class="input-label">Link expiration</span>
+            <div class="expiry-options" role="group" aria-label="Link expiration">
+              <label class="expiry-option">
+                <input type="radio" name="expiry" value="3600" id="exp-1h" />
+                <span class="expiry-pill">1 hr</span>
+              </label>
+              <label class="expiry-option">
+                <input type="radio" name="expiry" value="21600" id="exp-6h" />
+                <span class="expiry-pill">6 hrs</span>
+              </label>
+              <label class="expiry-option">
+                <input type="radio" name="expiry" value="86400" id="exp-1d" />
+                <span class="expiry-pill">1 day</span>
+              </label>
+              <label class="expiry-option">
+                <input type="radio" name="expiry" value="604800" id="exp-7d" />
+                <span class="expiry-pill">7 days</span>
+              </label>
+              <label class="expiry-option">
+                <input type="radio" name="expiry" value="none" id="exp-none" checked />
+                <span class="expiry-pill">None</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Submit button -->
           <button id="shorten-btn" class="shorten-btn" aria-label="Shorten URL">
             <span class="btn-text">Shorten URL</span>
@@ -136,23 +163,6 @@
           </div>
         </div>
 
-        <!-- Stats row -->
-        <div class="stats-row" role="list" aria-label="Service statistics">
-          <div class="stat" role="listitem">
-            <span class="stat-value">10M+</span>
-            <span class="stat-label">Links shortened</span>
-          </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat" role="listitem">
-            <span class="stat-value">99.9%</span>
-            <span class="stat-label">Uptime</span>
-          </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat" role="listitem">
-            <span class="stat-value">&lt;100ms</span>
-            <span class="stat-label">Response time</span>
-          </div>
-        </div>
       </section>
 
       <!-- How it works -->
@@ -183,7 +193,7 @@
 
     <!-- Footer -->
     <footer class="footer" role="contentinfo">
-      <p>Built with ⚡ by <span class="footer-brand">SwiftLink</span> &mdash; Fast, free, and reliable URL shortening.</p>
+      <p>Built with ⚡ by <span class="footer-brand">Linker</span> &mdash; Fast, free, and reliable URL shortening.</p>
     </footer>
 
     <!-- Toast notification -->

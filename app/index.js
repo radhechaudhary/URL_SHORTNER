@@ -38,7 +38,7 @@ for (let i = 65; i <= 90; i++) {
 
 const urlStore = async () => {
 
-    const a = Number(await client.incr("counter"));
+    let a = Number(await client.incr("counter"));
     // await client.set("counter", a + 1)
     // console.log(a)
     let ans = ""
@@ -55,7 +55,7 @@ app.get((req, res) => {
 })
 
 app.post('/shorten', async (req, res) => {
-    const { url } = req.body;
+    let { url, expiresIn } = req.body;
     if (!url) {
         return res.status(400).json({ message: 'URL is required.' });
     }
@@ -67,29 +67,46 @@ app.post('/shorten', async (req, res) => {
     } catch {
         return res.status(400).json({ message: 'Please provide a valid http/https URL.' });
     }
-    const shortCode = await urlStore()
+    console.log(expiresIn)
+    // expiresIn = 10
+
+    let shortCode = await urlStore();
     const baseUrl = `${req.protocol}://localhost:3000`;
     const shortUrl = `${baseUrl}/r/${shortCode}`;
+    const date = new Date();
     try {
-        await db.query("INSERT INTO urls (short_url, long_url) VALUES ($1, $2)", [shortCode, url]);
+        await client.set(`url:${shortCode}`, url, { EX: Math.min(60 * 60 * 4, expiresIn || 5000000) });
+        await db.query("INSERT INTO urls (short_url, long_url, expires_at) VALUES ($1, $2, $3)", [shortCode, url, expiresIn ? new Date(date.getTime() + expiresIn) : null]);
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: err.message || "Server error" });
     }
-    catch (err) {
-        return res.status(500).json({ message: err.message || "Server error" })
-    }
+
     return res.status(201).json({ shortUrl });
 });
 
 app.get('/r/:shortCode', async (req, res) => {
     const { shortCode } = req.params;
     try {
-        const longUrl = await db.query("SELECT long_url FROM urls WHERE short_url = $1", [shortCode]);
+        // Check Redis first (for expiring URLs)
+        const redisUrl = await client.get(`url:${shortCode}`);
+        if (redisUrl) {
+            return res.redirect(redisUrl);
+        }
+
+        // Fall back to Postgres (for permanent URLs)
+        const longUrl = await db.query("SELECT long_url, expires_at FROM urls WHERE short_url = $1", [shortCode]);
         if (!longUrl.rows[0]) {
-            return res.status(404).send('URL not found');
+            return res.status(404).send('URL not found or has expired');
+        }
+        console.log(new Date() > longUrl.rows[0].expires_at)
+        if (longUrl.rows[0].expires_at && new Date() > longUrl.rows[0].expires_at) {
+            return res.status(404).send('URL has expired');
         }
         res.redirect(longUrl.rows[0].long_url);
     }
     catch (err) {
-        return res.status(500).json({ message: err.message || "Server error" })
+        return res.status(500).json({ message: err.message || "Server error" });
     }
 
     // await db.query("UPDATE urls SET count = count + 1 WHERE short_url = $1", [shortCode]);

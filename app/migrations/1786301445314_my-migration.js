@@ -18,6 +18,9 @@ export const up = (pgm) => {
             type: "varchar",
             notNull: true
         },
+        expires_at: {
+            type: "timestamptz"
+        }
     });
 };
 
