@@ -56,6 +56,7 @@ app.get((req, res) => {
 
 app.post('/shorten', async (req, res) => {
     let { url, expiresIn } = req.body;
+    console.log(req.headers)
     if (!url) {
         return res.status(400).json({ message: 'URL is required.' });
     }
@@ -71,7 +72,7 @@ app.post('/shorten', async (req, res) => {
     // expiresIn = 10
 
     let shortCode = await urlStore();
-    const baseUrl = `${req.protocol}://localhost:3000`;
+    const baseUrl = req.headers.origin;
     const shortUrl = `${baseUrl}/r/${shortCode}`;
     const date = new Date();
     try {

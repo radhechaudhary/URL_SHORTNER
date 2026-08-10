@@ -1,16 +1,16 @@
 services:
 
-  app:
-    build: ./app
-    ports:
-      - "3000:3000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: always
-    environment:
-      DATABASE_URL: "postgres://admin:Radhe%401234@postgres:5432/url_shortner"
-      REDIS_URL: "redis://redis-cache:6379"
+  # app:
+  #   build: ./app
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   restart: always
+  #   environment:
+  #     DATABASE_URL: "postgres://admin:Radhe%401234@postgres:5432/url_shortner"
+  #     REDIS_URL: "redis://redis-cache:6379"
 
   postgres:
     image: postgres:latest
