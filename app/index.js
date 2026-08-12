@@ -50,9 +50,30 @@ const urlStore = async () => {
     return ans
 }
 
-app.get((req, res) => {
-    res.sendFile('./index.html')
-})
+app.get('/', (req, res) => {
+    res.sendFile('public/index.html', { root: '.' });
+});
+
+app.get('/api', (req, res) => {
+    res.sendFile('public/api.html', { root: '.' });
+});
+
+app.get('/api/stats', async (req, res) => {
+    try {
+        const counter = await client.get("counter");
+        return res.status(200).json({
+            linksShortened: Number(counter) - 134537,
+            uptime: "99.9%",
+            responseTime: "<100ms"
+        });
+    } catch (err) {
+        return res.status(200).json({
+            linksShortened: 0,
+            uptime: "99.9%",
+            responseTime: "<100ms"
+        });
+    }
+});
 
 app.post('/shorten', async (req, res) => {
     let { url, expiresIn } = req.body;
@@ -72,7 +93,7 @@ app.post('/shorten', async (req, res) => {
     // expiresIn = 10
 
     let shortCode = await urlStore();
-    const baseUrl = req.headers.origin;
+    const baseUrl = req.headers.origin || `${req.protocol}://${req.get('host')}`;
     const shortUrl = `${baseUrl}/r/${shortCode}`;
     const date = new Date();
     try {

@@ -156,8 +156,8 @@ body {
   gap: 14px;
 }
 
-/* GitHub link */
-.github-link {
+/* GitHub and API links */
+.github-link, .api-link {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -173,7 +173,7 @@ body {
   letter-spacing: 0.2px;
 }
 
-.github-link:hover {
+.github-link:hover, .api-link:hover {
   color: var(--text-primary);
   border-color: rgba(74, 111, 165, 0.4);
   background: rgba(74, 111, 165, 0.08);

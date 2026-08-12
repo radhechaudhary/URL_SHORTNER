@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Linker Developer API — Integrate url shortening capabilities directly into your project." />
+  <title>Linker — Developer API Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Documentation Page Layout */
+    .docs-container {
+      max-width: 1100px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .docs-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .docs-title {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+    }
+
+    .docs-subtitle {
+      font-size: clamp(14px, 1.8vw, 16px);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      margin-bottom: 60px;
+    }
+
+    /* Endpoint Card */
+    .api-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: border-color var(--transition-normal);
+    }
+
+    .api-card:hover {
+      border-color: var(--color-border-hover);
+    }
+
+    .api-card-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .api-endpoint-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .method-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .method-badge.post {
+      background: rgba(74, 158, 122, 0.12);
+      border: 1px solid rgba(74, 158, 122, 0.25);
+      color: #6ee7b7;
+    }
+
+    .method-badge.get {
+      background: rgba(99, 130, 180, 0.12);
+      border: 1px solid rgba(99, 130, 180, 0.25);
+      color: #8ba8cc;
+    }
+
+    .endpoint-path {
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .api-card-body {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .api-card-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .api-details {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-subtitle-docs {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .params-table th,
+    .params-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .params-table th {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .params-table td {
+      color: var(--text-primary);
+    }
+
+    .param-name {
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      color: var(--color-accent);
+    }
+
+    .param-type {
+      font-size: 11px;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .param-req {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .param-req.required {
+      color: var(--color-error);
+    }
+
+    .param-req.optional {
+      color: var(--text-secondary);
+    }
+
+    /* Tabs & Code Panel */
+    .code-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .code-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--color-border);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+      color: var(--color-accent);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--color-accent);
+    }
+
+    .code-display {
+      padding: 18px;
+      overflow-x: auto;
+      margin: 0;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .code-display pre {
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #9cdcfe;
+    }
+
+    /* Live Sandbox Console */
+    .sandbox-section {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 60px;
+    }
+
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sandbox-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sandbox-input {
+      background: var(--color-surface-2);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--transition-normal);
+    }
+
+    .sandbox-input:focus {
+      border-color: var(--color-primary-light);
+    }
+
+    .sandbox-select {
+      background: var(--color-surface-2);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sandbox-btn {
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--gradient-primary);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .sandbox-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(61, 90, 128, 0.35);
+    }
+
+    .sandbox-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .sandbox-response-panel {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      min-height: 200px;
+    }
+
+    .response-header {
+      padding: 10px 18px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .response-status {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .response-status.success {
+      color: var(--color-success);
+    }
+
+    .response-status.error {
+      color: var(--color-error);
+    }
+
+    .response-body-container {
+      padding: 18px;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 260px;
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+
+    .response-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      height: 100%;
+      font-family: var(--font-body);
+      font-size: 13px;
+      min-height: 160px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background particles -->
+  <div class="bg-particles" aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="brand-icon" aria-hidden="true">⚡</span>
+        <span class="brand-name">Linker</span>
+      </div>
+      <div class="nav-right">
+        <div class="nav-badge">Developer API</div>
+        <a href="/" class="api-link" aria-label="Return to homepage" title="Go to homepage">
+          <span class="api-icon" aria-hidden="true">🏠</span>
+          <span class="api-label">Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Container -->
+  <main class="docs-container" id="main-content">
+    <header class="docs-header">
+      <h1 class="docs-title"><span class="gradient-text">Developer API</span></h1>
+      <p class="docs-subtitle">
+        Integrate url shortening capability directly into your apps and services with our simple, robust developer API.
+      </p>
+    </header>
+
+    <!-- Endpoints -->
+    <div class="docs-grid">
+
+      <!-- Endpoint 1: Shorten URL -->
+      <section class="api-card" aria-labelledby="endpoint-shorten-title">
+        <div class="api-card-header">
+          <div class="api-endpoint-badge">
+            <span class="method-badge post">POST</span>
+            <span class="endpoint-path" id="endpoint-shorten-title">/shorten</span>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Shorten any URL</span>
+        </div>
+        <div class="api-card-body">
+          <div class="api-details">
+            <div>
+              <h2 class="section-subtitle-docs">Description</h2>
+              <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+                Create a customized, shortened link that redirects immediately to the original destination. You can
+                optionally configure an expiration duration.
+              </p>
+            </div>
+            <div>
+              <h2 class="section-subtitle-docs">Request Body</h2>
+              <table class="params-table">
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="param-name">url</td>
+                    <td><span class="param-type">string</span></td>
+                    <td class="param-req required">Yes</td>
+                    <td>The absolute target HTTP or HTTPS URL to shorten.</td>
+                  </tr>
+                  <tr>
+                    <td class="param-name">expiresIn</td>
+                    <td><span class="param-type">number</span></td>
+                    <td class="param-req optional">No</td>
+                    <td>Expiration time-to-live in milliseconds (e.g. 3600000 for 1 hour). Max 4 hours.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="code-panel">
+            <div class="code-tabs" data-endpoint="shorten">
+              <button class="tab-btn active" data-lang="curl">cURL</button>
+              <button class="tab-btn" data-lang="js">JavaScript</button>
+              <button class="tab-btn" data-lang="python">Python</button>
+              <button class="tab-btn" data-lang="go">Go</button>
+            </div>
+            <div class="code-display">
+              <pre><code id="code-shorten-block"></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Endpoint 2: Get Stats -->
+      <!-- <section class="api-card" aria-labelledby="endpoint-stats-title">
+        <div class="api-card-header">
+          <div class="api-endpoint-badge">
+            <span class="method-badge get">GET</span>
+            <span class="endpoint-path" id="endpoint-stats-title">/api/stats</span>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Fetch server statistics</span>
+        </div>
+        <div class="api-card-body">
+          <div class="api-details">
+            <div>
+              <h2 class="section-subtitle-docs">Description</h2>
+              <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+                Retrieve the latest server metrics including total links shortened, current service uptime, and latency.
+              </p>
+            </div>
+            <div>
+              <h2 class="section-subtitle-docs">Query Parameters</h2>
+              <p style="font-size: 13px; color: var(--text-muted); font-style: italic; margin-top: 4px;">
+                This endpoint does not accept any query parameters.
+              </p>
+            </div>
+          </div>
+          <div class="code-panel">
+            <div class="code-tabs" data-endpoint="stats">
+              <button class="tab-btn active" data-lang="curl">cURL</button>
+              <button class="tab-btn" data-lang="js">JavaScript</button>
+              <button class="tab-btn" data-lang="python">Python</button>
+              <button class="tab-btn" data-lang="go">Go</button>
+            </div>
+            <div class="code-display">
+              <pre><code id="code-stats-block"></code></pre>
+            </div>
+          </div>
+        </div>
+      </section> -->
+
+    </div>
+
+    <!-- Live Sandbox Playground -->
+    <section class="sandbox-section" aria-labelledby="sandbox-title">
+      <h2 id="sandbox-title" class="section-title" style="margin-bottom: 12px; text-align: left;">Live API Console</h2>
+      <p style="font-size: 14px; color: var(--text-secondary); max-width: 700px; margin-bottom: 24px;">
+        Experiment with the API directly from your browser. Fill in the fields below to send a live, real-time request
+        to the Linker API server and view the response.
+      </p>
+
+      <div class="sandbox-grid">
+        <form id="sandbox-form" class="sandbox-form">
+          <div class="form-group">
+            <label class="input-label" for="sandbox-url">Long URL to shorten</label>
+            <input type="url" id="sandbox-url" class="sandbox-input" placeholder="https://example.com/some/long/link"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="input-label" for="sandbox-expiry">Link expiration</label>
+            <select id="sandbox-expiry" class="sandbox-select">
+              <option value="none">None</option>
+              <option value="3600000">1 hour (3600000 ms)</option>
+              <option value="21600000">6 hours (21600000 ms)</option>
+              <option value="86400000">1 day (86400000 ms)</option>
+            </select>
+          </div>
+          <button type="submit" id="sandbox-submit" class="sandbox-btn">
+            <span>Send Request</span>
+            <span aria-hidden="true">⚡</span>
+          </button>
+        </form>
+
+        <div class="sandbox-response-panel">
+          <div class="response-header">
+            <span>Response</span>
+            <span class="response-status" id="response-status-text">&mdash;</span>
+          </div>
+          <pre
+            class="response-body-container"><code id="response-body-code"><div class="response-placeholder">Response payload will be displayed here after you click "Send Request".</div></code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <p>Built with ⚡ by <span class="footer-brand">Linker</span> &mdash; Fast, free, and reliable URL shortening.</p>
+    <p>@radhechaudhary</p>
+  </footer>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="api-script.js"></script>
+</body>
+
+</html>

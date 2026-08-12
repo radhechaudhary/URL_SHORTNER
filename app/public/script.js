@@ -171,4 +171,41 @@ shortenAnotherBtn.addEventListener('click', () => {
 /* ── Focus input on page load ────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
   longUrlInput.focus();
+  loadStatistics();
 });
+
+/* ── Fetch and Animate Statistics ────────────────────────── */
+async function loadStatistics() {
+  const statLinksElem = document.getElementById('stat-links');
+  const statUptimeElem = document.getElementById('stat-uptime');
+  const statLatencyElem = document.getElementById('stat-latency');
+
+  try {
+    const res = await fetch('/api/stats');
+    if (!res.ok) throw new Error('Failed to fetch stats');
+    const data = await res.json();
+
+    if (data.linksShortened) {
+      animateValue(statLinksElem, Math.max(0, data.linksShortened - 30), data.linksShortened, 1000);
+    }
+    if (data.uptime) statUptimeElem.textContent = data.uptime;
+    if (data.responseTime) statLatencyElem.textContent = data.responseTime;
+  } catch (err) {
+    console.error('Error loading stats:', err);
+    // Keep default values defined in HTML
+  }
+}
+
+function animateValue(obj, start, end, duration) {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const value = Math.floor(progress * (end - start) + start);
+    obj.textContent = value.toLocaleString();
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+}
